@@ -1,0 +1,3 @@
+C:/Users/23303/CLionProjects/BorderlessWindow/cmake-build-debug/CMakeFiles/BorderlessWindow.dir
+C:/Users/23303/CLionProjects/BorderlessWindow/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/23303/CLionProjects/BorderlessWindow/cmake-build-debug/CMakeFiles/rebuild_cache.dir
