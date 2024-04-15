@@ -188,9 +188,11 @@ auto CALLBACK BorderlessWindow::WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPAR
                     case WM_RBUTTONDOWN: {
                         POINT cursor;
                         ::GetCursorPos(&cursor);
-                        ::SetForegroundWindow(hwnd);
-                        ::TrackPopupMenu(reinterpret_cast<HMENU>(wparam), 0, cursor.x, cursor.y, 0, hwnd, nullptr);
-                        ::PostMessageW(hwnd, WM_NULL, 0, 0);
+                        std::cout<< "WM_RBUTTONDOWN" << std::endl;
+                        window.trayWindow->showTrayWindowAt(&cursor);
+//                        ::SetForegroundWindow(hwnd);
+//                        ::TrackPopupMenu(reinterpret_cast<HMENU>(wparam), 0, cursor.x, cursor.y, 0, hwnd, nullptr);
+//                        ::PostMessageW(hwnd, WM_NULL, 0, 0);
                         return 0;
                     }
                     case WM_LBUTTONDBLCLK: {
@@ -496,5 +498,20 @@ void BorderlessWindow::load_statics() {
     hIcon = static_cast<HICON>(LoadImage(nullptr, L"../assets/penguin.ico", IMAGE_ICON, 0, 0, LR_LOADFROMFILE));
     if (hIcon == nullptr) {
         throw last_error("failed to load icon");
+    }
+}
+
+ auto BorderlessWindow::RunApp() -> void {
+    try {
+        BorderlessWindow window;
+
+        MSG msg;
+        while (::GetMessageW(&msg, nullptr, 0, 0) == TRUE) {
+            ::TranslateMessage(&msg);
+            ::DispatchMessageW(&msg);
+        }
+    }
+    catch (const std::exception& e) {
+        ::MessageBoxA(nullptr, e.what(), "Unhandled Exception", MB_OK|MB_ICONERROR);
     }
 }

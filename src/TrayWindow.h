@@ -12,6 +12,13 @@ public:
     HWND hwnd= nullptr;
     HWND parent= nullptr;
     explicit TrayWindow(HWND parent,void* userdata);
+    void showTrayWindowAt(LPPOINT point);
+    static auto CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) noexcept -> LRESULT;
+
+    ~TrayWindow(){
+        hwnd= nullptr;
+        parent= nullptr;
+    }
 };
 
 
