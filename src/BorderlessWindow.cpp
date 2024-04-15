@@ -72,9 +72,9 @@ namespace {
         );
     }
 
-    auto window_class(WNDPROC wndproc,void * userdata) -> const wchar_t * {
+    auto window_class(WNDPROC wndproc, void *userdata) -> const wchar_t * {
 
-        auto window=static_cast<BorderlessWindow*>(userdata);
+        auto window = static_cast<BorderlessWindow *>(userdata);
 
         static const wchar_t *window_class_name = [&] {
             WNDCLASSEXW wcx{};
@@ -116,8 +116,12 @@ namespace {
 
     auto create_window(WNDPROC wndproc, void *userdata) -> HWND {
 
+        // create a transparent window at initial otherwise set transparency will not work
         auto handle = CreateWindowExW(
-                static_cast<DWORD>(Style::transparent), window_class(wndproc,userdata), L"Borderless Window",
+                static_cast<DWORD>(Style::transparent),
+//                0,
+                window_class(wndproc, userdata),
+                L"Borderless Window",
                 static_cast<DWORD>(Style::basic_borderless),
 //                WS_EX_NOREDIRECTIONBITMAP,
                 100,
@@ -133,10 +137,10 @@ namespace {
     }
 }
 
-BorderlessWindow::BorderlessWindow(){
+BorderlessWindow::BorderlessWindow() {
     load_statics();
-    handle=create_window(&BorderlessWindow::WndProc, this);
-    trayWindow=new TrayWindow(handle,this);
+    handle = create_window(&BorderlessWindow::WndProc, this);
+    trayWindow = new TrayWindow(handle, this);
 //    trayWindow = TrayWindow(handle);
 //    set_borderless(borderless);
 //    set_borderless_shadow(borderless_shadow);
@@ -324,11 +328,8 @@ auto BorderlessWindow::hit_test(POINT cursor) const -> LRESULT {
 }
 
 void BorderlessWindow::set_opacity(float d) {
-    std::cout << "set_opacity" << d << std::endl;
     set_transparent_window(d);
-
     draw();
-
 }
 
 void BorderlessWindow::init_direct2d() {
@@ -481,8 +482,10 @@ void BorderlessWindow::draw() {
 }
 
 void BorderlessWindow::set_transparent_window(float d) {
-    ::SetWindowLongPtrW(handle, GWL_STYLE, static_cast<LONG>(Style::transparent));
-    ::SetWindowLongPtr(handle, GWL_EXSTYLE, static_cast<LONG>(Style::aero_borderless));
+    ::SetWindowLongPtr(handle, GWL_STYLE, static_cast<LONG>(Style::basic_borderless));
+//    ::SetWindowLongPtr(handle, GWL_EXSTYLE, static_cast<LONG>(Style::transparent));
+//    ::SetLayeredWindowAttributes(handle, RGB(0, 0, 0), static_cast<BYTE>(d * 255), LWA_ALPHA);
+    ::SetWindowLongPtr(handle, GWL_STYLE, static_cast<LONG>(Style::transparent));
 
     // redraw frame
     ::SetWindowPos(handle, nullptr, 300, 100, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE);

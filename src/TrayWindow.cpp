@@ -18,6 +18,7 @@ TrayWindow::TrayWindow(HWND parent,void * userdata) {
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = WM_USER + 1;
     nid.hIcon = window->hIcon;
-    wcscpy_s(nid.szTip, L"Tray Icon Example");
+    // tooltip string
+    wcscpy_s(nid.szTip, L"TrayApp");
     Shell_NotifyIcon(NIM_ADD, &nid);
 }
